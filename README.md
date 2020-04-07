@@ -1,15 +1,16 @@
 To install the package, use the following code.
 
-install.packages(“devtools”,“learnr”) library(devtools)
-install\_github(“chrisaberson/MVstats”)
+install.packages(“devtools”)  
+install.packages(“learnr”) 
+library(devtools)  
+install\_github(“chrisaberson/MVstats”)  
 
-To run a tutorial, use this code. Currently, there is only a Logistic
-tutorial.
+To run a tutorial, use this code. Currently, there is only a Logistic tutorial.  
 
-library(learnr) run\_tutorial(“Logistic”, package = “MVstats”)
+library(learnr) 
+run\_tutorial(“Logistic”, package = “MVstats”)
 
-After you run this code, the tutorial will open, either in a separate
-RStudio standalone window or in a tab on your browser.
+After you run this code, the tutorial will open, either in a separate RStudio standalone window or in a tab on your browser.
 
 If this doesn’t work, you likely need to update your rtools. Go to
 <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>
