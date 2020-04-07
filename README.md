@@ -14,4 +14,4 @@ After you run this code, the tutorial will open, either in a separate RStudio st
 
 If this doesn’t work, you likely need to update your rtools. Go to
 <a href="https://cran.r-project.org/bin/windows/Rtools/" class="uri">https://cran.r-project.org/bin/windows/Rtools/</a>
-and download the most recent version for your platform.
+and download the most recent version for your platform (this is for Windows, I am looking into options for other platforms).  
