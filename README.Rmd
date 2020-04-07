@@ -1,0 +1,22 @@
+---
+title: "README"
+author: "Chris Aberson"
+date: "4/5/2020"
+output: md_document
+---
+
+To install the package, use the following code.
+
+
+install.packages("devtools","learnr")
+library(devtools)
+install_github("chrisaberson/MVstats")
+
+To run a tutorial, use this code. Currently, there is only a Logistic tutorial. 
+
+library(learnr)
+run_tutorial("Logistic", package = "MVstats")
+
+After you run this code, the tutorial will open, either in a separate RStudio standalone window or in a tab on your browser. 
+
+If this doesn't work, you likely need to update your rtools. Go to  https://cran.r-project.org/bin/windows/Rtools/ and download the most recent version (for your platform (Note: Rtools )
