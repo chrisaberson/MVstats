@@ -9,6 +9,7 @@ To run a tutorial, use this code. Currently, there is only a Logistic
 tutorial.
 
 library(learnr)  
+library(MVstats)
 run\_tutorial(“Logistic”, package = “MVstats”)
 
 After you run this code, the tutorial will open, either in a separate
