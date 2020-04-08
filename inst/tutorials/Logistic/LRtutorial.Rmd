@@ -100,6 +100,12 @@ learnr::quiz(
 
 ## Examining our data
 
+```{r echo = F, eval = T}
+logistic2<-MVstats::logistic2
+admit<-MVstats::admit
+```
+
+
 ```{r echo = T, eval = F}
 str(logistic2)
 ```   
@@ -108,7 +114,7 @@ str(logistic2)
 
 Paste the code into the run window below. The str command tells us what kind of data we have. Our primary interest here are variables that are categorical. They have to be explicitly recoded as factors with each level being given a name. 
 
-```{r ex1, exercise = TRUE, exercise.lines = 1}
+```{r ex0, exercise = TRUE, exercise.lines = 1}
 
 ```
 
@@ -123,22 +129,25 @@ logistic2$physrec_F<-factor(logistic2$physrec,
                           levels = c(0:1),
                           labels = c("No", "Yes"))
 summary(logistic2$physrec_F)
+
 ```
 
 ### Exercise 1: Variable Coding
 
 Use the datafile *admit* (again note that these data are already loaded in your workspace). In this datafile , the outcome variable is called **admit** (yes both the data file and variable have the same name). **admit** will need to be recoded (0 = No, 1 = Yes). Run the summary on the new variable (call the new variable admit_F)
 
-```{r ex4, exercise = TRUE, exercise.lines = 5}
+```{r ex1, exercise = TRUE, exercise.lines = 5}
 
 ```
 
-```{r ex4-solution}
+```{r ex1-solution}
 admit$admit_F<-factor(admit$admit,
                           levels = c(0:1),
                           labels = c("No", "Yes"))
 summary(admit$admit_F)
 ```
+
+Make sure you have run this analysis. Your code later in the tutorial will not work unless you complete this task. 
 
 ## Examine Relationship Using Linear Regression 
 
@@ -153,23 +162,12 @@ Note that this section is to demonstrate why we cannot use linear regression wit
 
 In the video, we started with using linear regression using this code. Note that I am using the variable that was simply numeric here as lm will not accept factors as dependent variables. 
 
-```{r echo = T, eval = F}
+```{r echo = T, eval =T}
 reg<-lm(comply~physrec,data=logistic2)
 summary(reg)
 plot(reg)
 ```
 
-Paste the code into the box below to run the analyses. 
-
-```{r ex5, exercise = TRUE, exercise.lines = 3}
-
-```
-
-```{r echo = F, eval = F}
-reg<-lm(comply~physrec,data=logistic2)
-summary(reg)
-plot(reg)
-```
 
 ## Bonus: Jittering the plot!
 
@@ -187,16 +185,16 @@ abline(lm(logistic2$residuals~logistic2$predicted))
 
 ## Exercise 2: Running linear regression on the admit data
 
-For the *admit* data predict admit from GRE scores (name the model object ex7), summarize the model, and add plot the results (first using the regular plot command). How do the residuals look? (Note: We don't need to jitter here as GRE is a continuous predictor). The variable names are **admit** and **gre**.
+For the *admit* data predict admit from GRE scores (name the model object ex2), summarize the model, and add plot the results (first using the regular plot command). How do the residuals look? (Note: We don't need to jitter here as GRE is a continuous predictor). The variable names are **admit** and **gre**.
 
-```{r ex7, exercise = TRUE, exercise.lines = 3}
+```{r ex2, exercise = TRUE, exercise.lines = 3}
 
 ```
 
-```{r ex7-solution}
-ex7<-lm(admit~gre, data = admit)
-summary(ex7)
-plot(ex7)
+```{r ex2-solution}
+ex2<-lm(admit~gre, data = admit)
+summary(ex2)
+plot(ex2)
 ```
 
 
@@ -237,7 +235,7 @@ summary(Model1)
 ``` 
 Use the window below to run the code to reproduce results from the video. 
 
-```{r ex8, exercise = TRUE, exercise.lines = 2}
+```{r ex02, exercise = TRUE, exercise.lines = 2}
 
 ```
 
@@ -250,22 +248,428 @@ exp(confint(Model1))
 
 Use the window below to run the code to reproduce results from the video. 
 
-```{r ex9, exercise = TRUE, exercise.lines = 2}
+```{r ex03, exercise = TRUE, exercise.lines = 2}
 
 ```
 
 ## Exercise 3: Running Logistic Regression with One Predictor
 
-Using the admit data from earlier, run a logistic regression predicting admission (admit( from GRE scores (GRE). Name your model ex10. Be sure to convert to odds ratios and get confidence intervals as well. 
+Using the admit data from earlier, run a logistic regression predicting admission (admit( from GRE scores (GRE). Name your model ex3. Be sure to convert to odds ratios and get confidence intervals as well. 
 
-```{r ex10, exercise = TRUE, exercise.lines = 4}
+```{r ex3, exercise = TRUE, exercise.lines = 4}
 
 ```
 
-```{r ex10-solution}
-ex10<-glm(admit_F~gre, data=admit, family = binomial)
-summary(ex10)
-exp(ex10$coefficients)
-exp(confint(ex10))
+```{r ex3-solution}
+ex3<-glm(admit_F~gre, data=admit, family = binomial)
+summary(ex3)
+exp(ex3$coefficients)
+exp(confint(ex3))
+```
+
+### Quiz
+
+```{r logquiz3}
+learnr::quiz(
+  learnr::question("Based on the results of your analysis",
+    learnr::answer("Higher GRE scores relate to a greater likelihood of admission", correct = TRUE),
+    learnr::answer("GRE scores are not related to admission"),
+    learnr::answer("Lower GRE scores relate to a greater likelihood of admission"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+)
+
+``` 
+
+## Model Fit
+
+Just like in regression, we get a statistic that addresses whether or not the model significantly predicts outcomes. Those are not particularly useful with just one predictor but we will examine those now so we can run use those values later for models with multiple predictors. We will also examine how well our models predict outcomes (something that is useful regardless of the number of predictors).
+
+The basic process here is to take the difference between the null deviance model and the residual deviance model. 
+
+
+```{r}
+Model1<-glm(comply_F~physrec_F, data=logistic2, family = binomial)
+summary(Model1)
+```
+
+The null model reflects a model with no predictors. This is sometimes called a "intercept-only" model. It is how well we can predict **comply** without any predictors. One way to think about this is by asking "how many people could we accurately classify" simply based on descriptive statistics. Let's start by examining the summary below. 
+
+```{r}
+summary(logistic2$comply_F)
+```
+
+Based on these numbers, we could correctly classify 88 people out of the total of 164 (88+76) by simply predicting everyone was in the "No" category. 
+
+Comparing the null model and out prediction model (the one where we used physrec as a predictor) is accomplished with the code below. For some reason, the logistic regression output does not provide that test but the code below accomplishes. 
+
+```{r}
+modelChi<-Model1$null.deviance-Model1$deviance
+modelChi
+chidf<-Model1$df.null-Model1$df.residual
+chidf
+chisq.prob<-1-pchisq(modelChi, chidf)
+chisq.prob
+```
+
+Here we get a chi-square value of 34.6 based on 1 df (each predictor uses a df) with *p* < .001. 
+
+### Exercise 4: Model Fit with Chi-Square
+
+Using the admit data from earlier, run a logistic regression predicting admission (admit from GRE scores (GRE). Name your model ex4 this time. Derive the Chi-square, df, and probability. 
+
+```{r ex4, exercise = TRUE, exercise.lines = 7}
+
+```
+
+```{r ex4-solution}
+ex4<-glm(admit_F~gre, data=admit, family = binomial)
+modelChi<-ex4$null.deviance-ex4$deviance
+modelChi
+chidf<-ex4$df.null-ex4$df.residual
+chidf
+chisq.prob<-1-pchisq(modelChi, chidf)
+chisq.prob
+```
+
+## Digging deeper on model fit: Null model
+
+We can examine the null by running a logistic regression without any predictors. To do that the code below uses ~1. You can use this is in any prediction model to run a null (a.k.a., intercept only) model. 
+
+```{r}
+null<-glm(comply_F~1, data=logistic2, family = binomial)
+summary(null)
+```
+
+Note that these deviance statistics are exactly the same as we saw in Model 1 under Null Deviance. 
+
+```{r}
+summary(Model1)
+```
+
+## More Model Fit: Predicted outcome vs. actual outcome
+
+Another way to evaluate model fit is to compare actual outcomes to predicted outcomes. The code below accomplishes this. Technically, we are taking the fitted (predicted) probabilty of group membership and assigning people to groups based on those predicted probabilities. 
+
+```{r}
+table(null$y,fitted(null)>.5)
+```
+
+Across the top is the prediction. Here, with no predictors (only the intercept) we predict everyone to be "False" (a No response on the outcome variable). On the left hand side, the 0 and 1 reflect the actual scores, again showing that we have 88 Nos and 76 Yeses. Even without preditors, we still could get about 54% correct. 
+
+Now, examining the model that included predictors. 
+
+```{r}
+table(Model1$y,fitted(Model1)>.5)
+```
+
+Here, we see we are now predicting both True (Yes) and False (No) outcomes. We see that of the 88 people who did not get screened, we predicted 44 correctly as False but also 44 incorrectly as True - so we have a 50% accuracy rate. Among those that did get screened (the 1s), we got 69 correct but only 7 wrong (91% correct!). Overall we have 113 correct responses (44+69) and 51 incorrect (7+44). In total, we have 69% right compared to 54% without any predictors. 
+
+It is always important to interpret this statistic in comparison to the null model. You may be able to correctly classify 70% in a model with predictors but that means very different things if the null model correctly classifies 68% vs. 50%. If the null classifies 68% correctly, our new model (with predictors) isn't much of an improvement whereas if the null classifies 50% correctly, our new model substantially improves predction. 
+
+### Exercise 5: Classification Tables
+
+Build a classification table for the admit data. Use the model built in the previous exercise called ex4 to derive the table. 
+
+```{r ex5, exercise = TRUE, exercise.lines = 1}
+
+```
+
+```{r ex5-solution}
+table(ex4$y,fitted(ex4)>.5)
+```
+### Quiz
+
+```{r logquiz4}
+learnr::quiz(
+  learnr::question("Based on the classification table, which statement is true",
+    learnr::answer("Including GRE as a predictor did not increase the number of correctly  classified cases", correct = TRUE),
+    learnr::answer("GRE scores improved prediction"),
+    learnr::answer("GRE scores made prediction worse"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+)
+
+``` 
+
+Note that in the prediction model we did see that GRE scores were significantly related to admission but the classification statistics tell us that we still didn't improve prediction accuracy over the null. 
+
+```{r}
+summary(glm(admit_F~gre, data=admit, family = binomial))
+```
+
+## Video: Logistic Regression with Multiple Predictors
+
+## Logistic Regression with Multiple Predictors
+
+### Quiz
+
+```{r logquiz5}
+learnr::quiz(
+  learnr::question("Logistic regression cannot handle interactions: ",
+    learnr::answer("False", correct = TRUE),
+    learnr::answer("True"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Centering is not necessary in logistic regression: ",
+    learnr::answer("False", correct = TRUE),
+    learnr::answer("True"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+)
+
+``` 
+
+This analysis appeared in the video. 
+
+```{r}
+Model4<-glm(comply~physrec+knowledg+benefits+barriers, data=logistic2, family = binomial())
+summary(Model4)
+exp(Model4$coefficients)
+exp(confint(Model4))
+modelChi<-Model4$null.deviance-Model4$deviance
+modelChi
+chidf<-Model4$df.null-Model4$df.residual
+chidf
+chisq.prob<-1-pchisq(modelChi, chidf)
+chisq.prob
+```
+To interpret this model, start with the model chi-square values. We have $$\chi^2$$(1) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
+
+From there, move to the specific predictors. My preference is to use *exp(b)*, the odds ratio. Below I interpret each using their 95% ci's but you can also do this with the probability. Recall that if the CI does not include 1, that we reject the null (a value of 1 means the odds of admission were completely unrelate to the outcome). 
+
+Physician's recommendation related to greater compliance with screeing, *exp(b)* = 6.31, *95% CI* [2.53,17.57]. Similarly, those who perceived more benefits from mammography were more likely to comply, *exp(b)* = 1.72, *95% CI* [1.08,2.82]. Perceived barriers related to less compliance, *exp(b)* = 0.56, *95% CI* [0.40,0.77], Knowledge was unrelated to compliance, *exp(b)* = 0.92, *95% CI* [0.11,7.69] 
+
+Turning to classification, the table below shows us jumping to 69% correctly classified (113 correct out of 164 total).
+
+```{r}
+table(Model4$y,fitted(Model4)>.5)
+```
+
+### Exercise 6: Running logistic with mutliple predictors
+
+Run logistic regression using the admit data. Predict admit_F (the variable) from gre, gpa, and rank. Call your model ex6. 
+
+```{r ex6, exercise = TRUE, exercise.lines = 7}
+
+```
+
+```{r ex6-solution}
+ex6<-glm(admit_F~gre+gpa+rank, data=admit, family = binomial)
+summary(ex6)
+exp(ex6$coefficients)
+exp(confint(ex6))
+modelChi<-ex6$null.deviance-ex6$deviance
+modelChi
+chidf<-ex6$df.null-ex4$df.residual
+chidf
+chisq.prob<-1-pchisq(modelChi, chidf)
+chisq.prob
+```
+
+### Quiz
+
+```{r logquiz6}
+learnr::quiz(
+  learnr::question("What statistics address whether the model predicted admission?",
+    learnr::answer("Chi-square", correct = TRUE),
+    learnr::answer("Log odds ratios (coefficients)"),
+    learnr::answer("Odds ratios (exponentiated coefficients)"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Was the model statistically significant?",
+    learnr::answer("Yes", correct = TRUE),
+    learnr::answer("No"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Which variables uniquely predicted admission?",
+    learnr::answer("All of them", correct = TRUE),
+    learnr::answer("Just GRE"),
+    learnr::answer("Just GPA"),
+    learnr::answer("Just Rank"),
+    learnr::answer("Just GRE and GPA"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Which is the best conclusion regarding GRE scores",
+    learnr::answer("Higher GRE scores related to a greater chance of admission", correct = TRUE),
+    learnr::answer("Lower GRE scores related to a greater chance of admission"),
+    learnr::answer("GRE scores were unrelated to admission decisions"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Which is the best conclusion regarding GPA",
+    learnr::answer("Higher GPA related to a greater chance of admission", correct = TRUE),
+    learnr::answer("Lower GPA related to a greater chance of admission"),
+    learnr::answer("GPA was unrelated to admission decisions"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("Which is the best conclusion regarding rank (recall that rank is sort of reversed, a rank of 1 is highest and a rank of 4 is lowest",
+    learnr::answer("More favorable rankings (e.g., a 1 or 2) related to a greater chance of admission", correct = TRUE),
+    learnr::answer("Less favorable rankings (e.g., a 3 or 4) related to a greater chance of admission"),
+    learnr::answer("Rankings were unrelated to admission decisions"),
+    correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+  
+)
+
+``` 
+
+### Exercise 7: Classification for mutliple predictors
+
+Recall the code for classification from earlier. 
+
+```{r}
+table(Model4$y,fitted(Model4)>.5)
+```
+
+Adapt this code to the model in the previous exercise to build a classification table for the *admit* data. You can use the analysis you ran called ex6.
+
+```{r ex7, exercise = TRUE, exercise.lines = 7}
+
+```
+
+```{r ex7-solution}
+table(ex6$y,fitted(ex6)>.5)
+```
+
+
+```{r logquiz7}
+learnr::quiz(
+  learnr::question("What percent of the total number of no outcomes (coded as 0) were correctly classified (as False)? ",
+    learnr::answer("Over 90%", correct = TRUE),
+    learnr::answer("Under 10%"),
+    learnr::answer("Around 70"),
+    correct = "Correct! There are 273 total 0 responses (253+20). 253 of those were correctly classified",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+learnr::question("What percent of the total number of yes outcomes (coded as 1) were correctly classified (as True)? ",
+    learnr::answer("Around 20%", correct = TRUE),
+    learnr::answer("Over 75%"),
+    learnr::answer("Around 70"),
+    correct = "Correct! There are 127 total 1 responses (98+29). Only 29 of those were correctly classified",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+learnr::question("What percent of the total number  outcomes were correctly classified? ",
+    learnr::answer("Around 70%", correct = TRUE),
+    learnr::answer("Under 30%"),
+    learnr::answer("Nearly 100%"),
+    correct = "Correct! There are 282 correct classifications (253+29) out of a total of 400 cases.",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+)
+``` 
+
+## Video - Logistic Regression V: Other Useful Statistics
+
+
+## Likelihood ratio $$\chi^2$$
+
+The LR $$\chi^2$$ is a more stable estimate of statistical significance than are the z-tests provided in R. Although not really the case in our examples, those values can tend to go crazy with smaller samples and complex models. 
+
+Running the LR $$\chi^2$$ requires that we first build a model with all of our predictors. Then we build models with all but one of the predictors included. In the example from the video with four predictors this meant that we created four additional models, in each one we excluded one (and only one) of our variables. Model 4 is the full model (with all four predictors). Model.phys has everything but physician's recommendation. Model.know has everything but knowledge, etc. 
+
+```{r}
+Model4<-glm(comply~physrec+knowledg+benefits+barriers, data=logistic2, family = binomial())
+Model.phys<-glm(comply~knowledg+benefits+barriers, data=logistic2, family = binomial())
+Model.know<-glm(comply~physrec+benefits+barriers, data=logistic2, family = binomial())
+Model.benef<-glm(comply~physrec+knowledg+barriers, data=logistic2, family = binomial())
+Model.barr<-glm(comply~physrec+knowledg+benefits, data=logistic2, family = binomial())
+```
+
+Next we use the `lmtest` package to build model comparisons. 
+
+```{r}
+lmtest::lrtest(Model4,Model.phys)
+lmtest::lrtest(Model4,Model.know)
+lmtest::lrtest(Model4,Model.benef)
+lmtest::lrtest(Model4,Model.barr)
+```
+
+The result for the first comparison (Model4 vs. Model.phys) is the LR $$\chi^2$$ for phys and so on down the line. 
+
+### Exercise 8 - Likelihood Ratio $$\chi^2$$
+
+Build your models here. Remember you will need one full model and then several (depending on the number of predictors) that exclude a single variable. 
+
+```{r ex8, exercise = TRUE, exercise.lines = 4}
+
+```
+
+```{r ex8-solution}
+ModelFull<-glm(admit~gre+gpa+rank, data=admit, family = binomial)
+Model.gre<-glm(admit~gpa+rank, data=admit, family = binomial)
+Model.gpa<-glm(admit~gre+rank, data=admit, family = binomial)
+Model.rank<-glm(admit~gre+gpa, data=admit, family = binomial)
+```
+
+Once you've built the models, compare them using lrtest from the `lmtest` package. This should yield three tests. .
+
+```{r ex8b, exercise = TRUE, exercise.lines = 3}
+
+```
+
+```{r ex8b-solution}
+lmtest::lrtest(ModelFull,Model.gre)
+lmtest::lrtest(ModelFull,Model.gpa)
+lmtest::lrtest(ModelFull,Model.rank)
+
+```
+
+## *$$R^2$$* Analogues (*$$R^2_L$$*) 
+
+The final value we examined in the video was *$$R^2_L$$*. The code below calculated the statistic from our final model. 
+
+```{r}
+R2L<-(Model4$null.deviance-Model4$deviance) / Model4$null.deviance
+R2L
+```
+
+
+### Exercise 9 Computing $$R^2_L$$*
+
+Adapt the code above to the *admit* data. Be sure to use your final model. 
+
+```{r ex9, exercise = TRUE, exercise.lines = 2}
+
+```
+
+```{r ex9-solution}
+R2L<-(ModelFull$null.deviance-ModelFull$deviance) / ModelFull$null.deviance
+R2L
 ```
 

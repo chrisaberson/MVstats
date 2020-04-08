@@ -7,10 +7,11 @@
 \format{A data frame with 500 rows and 5 variables:
 \describe{
   \item{X}{Case number}
-  \item{admit}{Admission decision. 1 = Yes, 2 = No}
+  \item{admit}{Admission decision. 0,1}
   \item{gre}{GRE score}
   \item{gpa}{College GPA}
   \item{rank}{Ranking based on letters of rec. 1-4}
+  \item{admit_F}{Admission decision as a Factor. Yes, No}
   }
   @source \url{https://osf.io/9tgxm/}}
 \usage{
