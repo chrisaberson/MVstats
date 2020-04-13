@@ -22,9 +22,11 @@ hint_text <- function(text, text_color = "#E69F00"){
 
 ## Overview
 
-This tutorial focuses on learning about logistic regression. The tutorial includes a combination of videos, text, and exercises. The videos are as before but now you can run example code and do exercises right in the tutorial. I can even add questions so that you can make sure you understand concepts before moving on. 
+This tutorial focuses on learning logistic regression. The tutorial includes a combination of videos, text, knowledge check quizzes, and exercises. 
 
-The PowerPoint slides for the presentation in the videos are on Canvas if you want a copy. 
+The PowerPoint slides for the presentation in the videos are on Canvas if you want a copy. For those not enrolled in my class, these files can be found here: https://osf.io/9tgxm/ 
+
+The videos (as well as others) can also be found on my YouTube channel https://www.youtube.com/channel/UC5kDZTyHZlgSgSEa3YQXOig 
 
 ## Packages 
 
@@ -34,18 +36,17 @@ This tutorial uses the following packages:
 * `lmtest` for likelihood ratio tests
 * `learnr` and `shiny` and `rmarkdown` for aspects of the tutorial
 
-
-These packages are automatically loaded within this tutorial. If you are working outside of this tutorial (i.e. in **RStudio**) then you need to make sure that the package has been installed by executing `install.packages("package_name")`, where *package_name* is the name of the package. If the package is already installed, then you need to reference it in your current session by executing `library(package_name)`, where *package_name* is the name of the package.
+These packages should be automatically loaded within this tutorial (but you already installed `learnr` if you are here). If you are working outside of this tutorial (e.g., working with the data files and trying analysis in R) then you need to make sure that the necessary packages has been installed on your machine.
 
 ## Data
 
 All data files exist within this package, so we can simply call them without reference to a file location. 
 
-*logistic2* These data represent 164 women. The data examine compliance with mammogram screening recommendations (i.e., did they get a mammogram?). The variables are **comply** coded as 0 = No, 1 = Yes (this is the outcome variables), **phyrec** also coded as 0 = No, 1 = Yes, representing whether their doctor recommended them for screening (i.e., did their doctor tell them to schedule a screening), **knowledge** a continuously scaled measure of knowledge about mammograms, and two variables measuring perceptions about mammograms - **benefits** and **barriers**. 
+*logistic2* These data represent 164 women and examine compliance with mammogram screening recommendations (i.e., did they get a mammogram?). The variables are **comply** coded as 0 = No, 1 = Yes (this is the outcome variables), **phyrec** also coded as 0 = No, 1 = Yes, representing whether their doctor recommended them for screening (i.e., did their doctor tell them to schedule a screening), **knowledge** a continuously scaled measure of mammogram knowledge, and two variables measuring mammograms perceptions - **benefits** and **barriers**. 
 
 *admit* These data examine Ph.D. program admissions. The variable **admit** is coded as 0 = No, 1 = Yes, representing whether or not the student was admitted (this is the outcome variable). The predictors are **gre**, **gpa**, and **rank** (ranking of the candidate  from letter writers).
 
-Both files are on the class' Google Share drive if you want to work with them outside of the tutorial. They are pre-loaded in this tutorial so you will not need to load the data as you work. (Note: If you are not in my class, these files can be found here: https://osf.io/9tgxm/).
+Both files are on the class' Google Share drive if you want to work with them outside of the tutorial. They are already loaded in this tutorial so you will not need to load the data as you work. (Note: If you are not in my class, these files can be found here: https://osf.io/9tgxm/).
 
 Videos generally range from about 10 to 15 minutes long (there are five of them).
 
@@ -57,8 +58,8 @@ Videos generally range from about 10 to 15 minutes long (there are five of them)
 
 ```{r logquiz_dv}
 learnr::quiz(
-  learnr::question("When do we use Logistic Regression",
-    learnr::answer("When we have dichotomous outcome variables", correct = TRUE),
+  learnr::question("When do we use Logistic Regression?",
+    learnr::answer("When we have a dichotomous outcome variable", correct = TRUE),
     learnr::answer("When linear regression assumptions fail"),
     learnr::answer("When we have categorical predictors"),
     learnr::answer("When we have dichotomous predictors"),
@@ -112,9 +113,7 @@ admit<-MVstats::admit
 str(logistic2)
 ```   
 
-### Code with options to run and solution
-
-Paste the code into the run window below. The str command tells us what kind of data we have. Our primary interest here are variables that are categorical. They have to be explicitly recoded as factors with each level being given a name. 
+Paste the code into the run window below. The str command tells us what kind of data we have. Our primary interest here are variables that are categorical. They have to be explicitly recoded as factors with each level being given a name.
 
 ```{r ex0, exercise = TRUE, exercise.lines = 1}
 
@@ -131,12 +130,11 @@ logistic2$physrec_F<-factor(logistic2$physrec,
                           levels = c(0:1),
                           labels = c("No", "Yes"))
 summary(logistic2$physrec_F)
-
 ```
 
 ### Exercise 1: Variable Coding
 
-Use the datafile *admit* (again note that these data are already loaded in your workspace). In this datafile , the outcome variable is called **admit** (yes both the data file and variable have the same name). **admit** will need to be recoded (0 = No, 1 = Yes). Run the summary on the new variable (call the new variable admit_F)
+Use the datafile *admit* (again note that these data are already loaded in your workspace). In this datafile , the outcome variable is called **admit** (yes both the data file and variable have the same name). **admit** will need to be recoded (0 = No, 1 = Yes). Run the summary on the new variable (call the new variable admit_F). If you get stuck, the solution button will provide the correct code. 
 
 ```{r ex1, exercise = TRUE, exercise.lines = 5}
 
@@ -149,7 +147,6 @@ admit$admit_F<-factor(admit$admit,
 summary(admit$admit_F)
 ```
 
-Make sure you have run this analysis. Your code later in the tutorial will not work unless you complete this task. 
 
 ## Video 2: Try it as Linear Regression 
 
@@ -158,11 +155,11 @@ Make sure you have run this analysis. Your code later in the tutorial will not w
 
 ## With Linear Regression Examples (a.k.a., why we can't use linear regression)
 
-In this section, you will run the code from the video and then do an exercise where you adapt that code to the admit data. 
+In this section, you will examine the code from the video and then do an exercise where you adapt that code to the *admit* data. 
 
 Note that this section is to demonstrate why we cannot use linear regression with dichotomous outcome (dependent) variables. 
 
-In the video, we started with using linear regression using this code. Note that I am using the variable that was simply numeric here as lm will not accept factors as dependent variables. 
+In the video, we started with using linear regression using this code. Note that I am using the variable that was numeric (*comply*) here as *lm* will not accept factors as dependent variables. 
 
 ```{r echo = T, eval =T}
 reg<-lm(comply~physrec,data=logistic2)
@@ -173,9 +170,9 @@ plot(reg)
 
 ## Bonus: Jittering the plot!
 
-The code below pulls the predicted values from our analysis into the data set (line 1), calculates the residual (line 2), plots them with a jitter (line 3), and then add the line (line 4). 
+The code below pulls the predicted values from our analysis into the data set (line 2), calculates the residual (line 3), plots them with a jitter (line 3), and then add the line (line 4). 
 
-Jittering is useful when we have categorical values on a scatter plot as these values "pile up" - that is there might be 20 scores in the same place on the graph but we can't really see them because they are all on top of each other. The jitter function adds random noise to the values so we can better see the patterns. 
+Jittering is useful when we have categorical values on a scatter plot as these values "pile up" - that is there might be 20 scores in the same place on the graph but we can't really see them because they are all on top of each other. The *jitter* function adds random noise to the values so we can better see the patterns. 
 
 ```{r echo = T, eval = T}
 reg<-lm(comply~physrec,data=logistic2)
@@ -185,9 +182,9 @@ plot(logistic2$residuals ~ jitter(logistic2$predicted, 1), pch = 1)
 abline(lm(logistic2$residuals~logistic2$predicted))
 ```
 
-## Exercise 2: Running linear regression on the admit data
+## Exercise 2: Running linear regression on the *admit* data
 
-For the *admit* data predict admit from GRE scores (name the model object ex2), summarize the model, and add plot the results (first using the regular plot command). How do the residuals look? (Note: We don't need to jitter here as GRE is a continuous predictor). The variable names are **admit** and **gre**.
+For the *admit* data predict **admit** from GRE scores (name the model object ex2), summarize the model, and add plot the results (using the regular plot command). How do the residuals look? (Note: We don't need to jitter here as **gre** is a continuous predictor). The variable names are **admit** and **gre**.
 
 ```{r ex2, exercise = TRUE, exercise.lines = 3}
 
@@ -199,8 +196,7 @@ summary(ex2)
 plot(ex2)
 ```
 
-
-## Video #3: Running Logistic Regression with 1 Predictor 
+## Video 3: Running Logistic Regression with 1 Predictor 
 
 ![](https://youtu.be/o2uv83uD7-c)
 
@@ -209,7 +205,7 @@ plot(ex2)
 
 ```{r logquiz2}
 learnr::quiz(
-  learnr::question("The first step in running logistic regression is",
+  learnr::question("The first step in running logistic regression is often...",
     learnr::answer("Coding categorical variables as factors", correct = TRUE),
     learnr::answer("Graphing the residuals"),
     learnr::answer("Running linear regression"),
@@ -226,10 +222,8 @@ learnr::quiz(
 
 ## Examples from the video
 
-In the video, we saw the following logistic regression. Recall that we needed to code the variables to be factors before running logistic. 
+In the video, we saw the following logistic regression code. Recall that we needed to code the variables to be factors before running logistic. I did this and called the new variables **comply_F** and **physrec_F**.
 
-Model1<-glm(comply~physrec, data=logistic2, family = binomial)
-summary(Model1)
 
 ```{r echo = T, eval = F}
 Model1<-glm(comply_F~physrec_F, data=logistic2, family = binomial)
@@ -256,7 +250,7 @@ Use the window below to run the code to reproduce results from the video.
 
 ## Exercise 3: Running Logistic Regression with One Predictor
 
-Using the admit data from earlier, run a logistic regression predicting admission (admit( from GRE scores (GRE). Name your model ex3. Be sure to convert to odds ratios and get confidence intervals as well. 
+Using the *admit* data from earlier, run a logistic regression predicting admission (**admit_F** from GRE scores (*gre**). Name your model ex3. Be sure to convert to odds ratios and get confidence intervals as well. Remember, a higher score on the admissions variable is a yes response, lower scores are a no response. 
 
 ```{r ex3, exercise = TRUE, exercise.lines = 4}
 
@@ -273,11 +267,11 @@ exp(confint(ex3))
 
 ```{r logquiz3}
 learnr::quiz(
-  learnr::question("Based on the results of your analysis",
+  learnr::question("Based on the results of your analysis...",
     learnr::answer("Higher GRE scores relate to a greater likelihood of admission", correct = TRUE),
     learnr::answer("GRE scores are not related to admission"),
     learnr::answer("Lower GRE scores relate to a greater likelihood of admission"),
-    correct = "Correct!",
+    correct = "Yes!",
     incorrect = "Sorry, that's incorrect.",
     random_answer_order = TRUE,
     allow_retry = T
@@ -288,27 +282,27 @@ learnr::quiz(
 
 ## Model Fit
 
-Just like in regression, we get a statistic that addresses whether or not the model significantly predicts outcomes. Those are not particularly useful with just one predictor but we will examine those now so we can run use those values later for models with multiple predictors. We will also examine how well our models predict outcomes (something that is useful regardless of the number of predictors).
+Just like in linear regression, we get a statistic that addresses whether or not the model significantly predicts outcomes. Those are not particularly useful with just one predictor but we will examine the statistic now so we can run use those values later for models with multiple predictors. We will also examine how well our models predict outcomes in terms of the percent of predictions that are correct, something that is useful regardless of the number of predictors.
 
 The basic process here is to take the difference between the null deviance model and the residual deviance model. 
 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 Model1<-glm(comply_F~physrec_F, data=logistic2, family = binomial)
 summary(Model1)
 ```
 
 The null model reflects a model with no predictors. This is sometimes called a "intercept-only" model. It is how well we can predict **comply** without any predictors. One way to think about this is by asking "how many people could we accurately classify" simply based on descriptive statistics. Let's start by examining the summary below. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 summary(logistic2$comply_F)
 ```
 
 Based on these numbers, we could correctly classify 88 people out of the total of 164 (88+76) by simply predicting everyone was in the "No" category. 
 
-Comparing the null model and out prediction model (the one where we used **physrec** as a predictor) is accomplished with the code below. For some reason, the logistic regression output does not provide that test but the code below accomplishes. 
+Comparing the null model and our prediction model (the one where we used **physrec** as a predictor) is accomplished with the code below. For some reason, the logistic regression output does not provide that test but the code below accomplishes. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 modelChi<-Model1$null.deviance-Model1$deviance
 modelChi
 chidf<-Model1$df.null-Model1$df.residual
@@ -321,7 +315,7 @@ Here we get a chi-square value of 34.6 based on 1 df (each predictor uses a df) 
 
 ### Exercise 4: Model Fit with Chi-Square
 
-Using the admit data from earlier, run a logistic regression predicting admission (admit from GRE scores (GRE). Name your model ex4 this time. Derive the Chi-square, df, and probability. 
+Using the *admit* data from earlier, run a logistic regression predicting admission (**admit_F** from GRE scores (*gre*). Name your model ex4 this time. Derive the Chi-square, df, and probability. 
 
 ```{r ex4, exercise = TRUE, exercise.lines = 7}
 
@@ -339,16 +333,16 @@ chisq.prob
 
 ## Digging deeper on model fit: Null model
 
-We can examine the null by running a logistic regression without any predictors. To do that the code below uses ~1. You can use this is in any prediction model to run a null (a.k.a., intercept only) model. 
+We can examine the null by running a logistic regression without any predictors. To do that the code below uses ~1. You can use this is in any prediction model to run a null (a.k.a., intercept only) model. In many cases, R provides this as a null model in its output, so running the intercept-only model is unnecessary. However, in some applications (e.g., Mixed Linear Models), you need to run the null model for model comparison tests. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 null<-glm(comply_F~1, data=logistic2, family = binomial)
 summary(null)
 ```
 
-Note that these deviance statistics are exactly the same as we saw in Model 1 under Null Deviance. 
+Note that the deviance statistic are the same as we saw in Model 1 under Null Deviance. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 summary(Model1)
 ```
 
@@ -356,15 +350,17 @@ summary(Model1)
 
 Another way to evaluate model fit is to compare actual outcomes to predicted outcomes. The code below accomplishes this. Technically, we are taking the fitted (predicted) probability of group membership and assigning people to groups based on those predicted probabilities. 
 
-```{r}
+This isn't a formal evaluation of fit (i.e., we don't get a significance test) but it is good common sense way to evaluate fit over and above significance values. For example, a model that does not improve prediction very much over the null model might yield a statistically significant model fit under some conditions (e.g., large sample size) but not appreciably improve classification. 
+
+```{r echo=TRUE, eval=TRUE}
 table(null$y,fitted(null)>.5)
 ```
 
 Across the top is the prediction. Here, with no predictors (only the intercept) we predict everyone to be "False" (a No response on the outcome variable). On the left hand side, the 0 and 1 reflect the actual scores, again showing that we have 88 Nos and 76 Yeses. Even without predictors, we still could get about 54% correct. 
 
-Now, examining the model that included predictors. 
+Now, examining the model that includes predictors. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 table(Model1$y,fitted(Model1)>.5)
 ```
 
@@ -374,7 +370,12 @@ It is always important to interpret this statistic in comparison to the null mod
 
 ### Exercise 5: Classification Tables
 
-Build a classification table for the admit data. Use the model built in the previous exercise called ex4 to derive the table. 
+Build a classification table for the *admit* data. Use the model built in the previous exercise called ex4 to derive the table. 
+
+```{r echo=F, eval=TRUE}
+ex4<-glm(admit_F~gre, data=admit, family = binomial)
+```
+
 
 ```{r ex5, exercise = TRUE, exercise.lines = 1}
 
@@ -392,7 +393,7 @@ learnr::quiz(
     learnr::answer("Including GRE as a predictor did not increase the number of correctly  classified cases", correct = TRUE),
     learnr::answer("GRE scores improved prediction"),
     learnr::answer("GRE scores made prediction worse"),
-    correct = "Correct!",
+    correct = "Correct! Note that everyone was predicted as FALSE. Since the majority of cases were No, we could simply predict everyone as being not admitted and get about 68% right (273/400)",
     incorrect = "Sorry, that's incorrect.",
     random_answer_order = TRUE,
     allow_retry = T
@@ -403,16 +404,16 @@ learnr::quiz(
 
 Note that in the prediction model we did see that GRE scores were significantly related to admission but the classification statistics tell us that we still didn't improve prediction accuracy over the null. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 summary(glm(admit_F~gre, data=admit, family = binomial))
 ```
 
-## Video #4: Logistic Regression with Multiple Predictors
+## Video 4: Logistic Regression with Multiple Predictors
 
 ![](https://youtu.be/IuCv-E-KNPw)
 
 
-### Quiz 5: Interactions?
+## Quiz 5: Interactions?
 
 
 ```{r logquiz5}
@@ -442,7 +443,7 @@ learnr::quiz(
 
 This analysis appeared in the video. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 Model4<-glm(comply~physrec+knowledg+benefits+barriers, data=logistic2, family = binomial())
 summary(Model4)
 exp(Model4$coefficients)
@@ -454,7 +455,7 @@ chidf
 chisq.prob<-1-pchisq(modelChi, chidf)
 chisq.prob
 ```
-To interpret this model, start with the model chi-square values. We have $\chi^2$(1) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
+To interpret this model, start with the model chi-square values. We have $\chi^2$(4) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
 
 From there, move to the specific predictors. My preference is to use *exp(b)*, the odds ratio. Below I interpret each using their 95% ci's but you can also do this with the probability. Recall that if the CI does not include 1, that we reject the null (a value of 1 means the odds of admission were completely unrelated to the outcome). 
 
@@ -462,40 +463,69 @@ Physician's recommendation related to greater compliance with screening, *exp(b)
 
 Turning to classification, the table below shows us jumping to 69% correctly classified (113 correct out of 164 total).
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 table(Model4$y,fitted(Model4)>.5)
 ```
 
 ### Exercise 6: Running logistic with multiple predictors
 
-Run logistic regression using the *admit* data. Predict **admit_F** from **gre**, **gpa**, and **rank**. Call your model ex6. 
+Run logistic regression using the *admit* data. Predict **admit_F** from **gre**, **gpa**, and **rank**. Call your model ex6. Just run the model and summarize it for this part. 
 
-```{r ex6, exercise = TRUE, exercise.lines = 7}
+```{r ex6, exercise = TRUE, exercise.lines = 2}
 
 ```
 
 ```{r ex6-solution}
 ex6<-glm(admit_F~gre+gpa+rank, data=admit, family = binomial)
 summary(ex6)
+```
+
+Now get the odds ratios and their CIs
+
+```{r ex6b, exercise = TRUE, exercise.lines = 2}
+
+```
+
+```{r ex6b-solution}
 exp(ex6$coefficients)
 exp(confint(ex6))
+```
+
+Finally, calculate the model $\chi^2$, df, and probability.
+
+```{r ex6c, exercise = TRUE, exercise.lines = 6}
+
+```
+
+```{r ex6c-solution}
 modelChi<-ex6$null.deviance-ex6$deviance
 modelChi
-chidf<-ex6$df.null-ex4$df.residual
+chidf<-ex6$df.null-ex6$df.residual
 chidf
 chisq.prob<-1-pchisq(modelChi, chidf)
 chisq.prob
 ```
 
+
 ### Quiz 6 Interpreting Multiple Predictor Models
 
 ```{r logquiz6}
 learnr::quiz(
-  learnr::question("What statistics address whether the model predicted admission?",
+  learnr::question("What statistic(s) address whether the model predicted admission?",
     learnr::answer("Chi-square", correct = TRUE),
     learnr::answer("Log odds ratios (coefficients)"),
     learnr::answer("Odds ratios (exponentiated coefficients)"),
     correct = "Correct!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+  learnr::question("How many degrees of freedom does the model have?",
+    learnr::answer("3", correct = TRUE),
+    learnr::answer("1"),
+    learnr::answer("2"),
+    learnr::answer("4"),
+    correct = "Correct! One df per predictor",
     incorrect = "Sorry, that's incorrect.",
     random_answer_order = TRUE,
     allow_retry = T
@@ -555,13 +585,17 @@ learnr::quiz(
 
 Recall the code for classification from earlier. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 table(Model4$y,fitted(Model4)>.5)
 ```
 
 Adapt this code to the model in the previous exercise to build a classification table for the *admit* data. You can use the analysis you ran called ex6.
 
-```{r ex7, exercise = TRUE, exercise.lines = 7}
+```{r echo=F, eval=TRUE}
+ex6<-glm(admit_F~gre+gpa+rank, data=admit, family = binomial)
+```
+
+```{r ex7, exercise = TRUE, exercise.lines = 1}
 
 ```
 
@@ -603,27 +637,39 @@ learnr::question("What percent of the total number  outcomes were correctly clas
 )
 ``` 
 
-## Video #5: Logistic Regression Other Useful Statistics
+## Video 5: Logistic Regression Other Useful Statistics
 
 ![](https://youtu.be/z55gaV3CjzQ)
 
 ## Likelihood ratio $\chi^2$
 
-The LR $\chi^2$ is a more stable estimate of statistical significance than are the z-tests provided in R. Although not really the case in our examples, those values can tend to go crazy with smaller samples and complex models. 
+The LR $\chi^2$ is a more stable estimate of statistical significance than are the z-tests provided in R (these are often termed Wald tests and sometimes presented as a $\chi^2$ value). Although not the case in our examples, those values tend to go crazy with smaller samples and complex models. 
 
 Running the LR $\chi^2$ requires that we first build a model with all of our predictors. Then we build models with all but one of the predictors included. In the example from the video with four predictors this meant that we created four additional models, in each one we excluded one (and only one) of our variables. Model 4 is the full model (with all four predictors). Model.phys has everything but physician's recommendation. Model.know has everything but knowledge, etc. 
 
-```{r}
+First for **physrec**
+```{r echo=TRUE, eval=TRUE}
 Model4<-glm(comply~physrec+knowledg+benefits+barriers, data=logistic2, family = binomial())
 Model.phys<-glm(comply~knowledg+benefits+barriers, data=logistic2, family = binomial())
+```
+
+Now for **knowledg**. Note that I don't need the full model here because we already ran it. 
+```{r echo=TRUE, eval=TRUE}
 Model.know<-glm(comply~physrec+benefits+barriers, data=logistic2, family = binomial())
+```
+For **benefits**
+```{r echo=TRUE, eval=TRUE}
 Model.benef<-glm(comply~physrec+knowledg+barriers, data=logistic2, family = binomial())
+```
+
+For **barriers**
+```{r echo=TRUE, eval=TRUE}
 Model.barr<-glm(comply~physrec+knowledg+benefits, data=logistic2, family = binomial())
 ```
 
-Next we use the `lmtest` package to build model comparisons. 
+Next we use the `lmtest` package to build model comparisons. Note that the command is *lrtest* (rather than *lmtest*).
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 lmtest::lrtest(Model4,Model.phys)
 lmtest::lrtest(Model4,Model.know)
 lmtest::lrtest(Model4,Model.benef)
@@ -634,7 +680,7 @@ The result for the first comparison (Model4 vs. Model.phys) is the LR $\chi^2$ f
 
 ### Exercise 8 - Likelihood Ratio $\chi^2$ 
 
-Build your models here. Remember you will need one full model and then several (depending on the number of predictors) that exclude a single variable. 
+Using the *admit* data, build your models here. Recall, we predicted **admit_F** from **gre**,**gpa**,and **rank**. Remember you will need one full model and then several (depending on the number of predictors) that exclude a single variable. Note: We are just building the models here. When you run it nothing will appear yet as we are just creating the objects that hold the model information. 
 
 ```{r ex8, exercise = TRUE, exercise.lines = 4}
 
@@ -647,40 +693,114 @@ Model.gpa<-glm(admit~gre+rank, data=admit, family = binomial)
 Model.rank<-glm(admit~gre+gpa, data=admit, family = binomial)
 ```
 
-Once you've built the models, compare them using *lrtest* from the `lmtest` package. This should yield three tests. .
+Once you've built the models, compare them using *lrtest* from the `lmtest` package. This should yield three tests.
+
+
+```{r Echo=F}
+ModelFull<-glm(admit~gre+gpa+rank, data=admit, family = binomial)
+Model.gre<-glm(admit~gpa+rank, data=admit, family = binomial)
+Model.gpa<-glm(admit~gre+rank, data=admit, family = binomial)
+Model.rank<-glm(admit~gre+gpa, data=admit, family = binomial)
+```
 
 ```{r ex8b, exercise = TRUE, exercise.lines = 3}
 
 ```
 
+
 ```{r ex8b-solution}
 lmtest::lrtest(ModelFull,Model.gre)
 lmtest::lrtest(ModelFull,Model.gpa)
 lmtest::lrtest(ModelFull,Model.rank)
+```
 
+For comparison, I've added a summary of the full model below. 
+
+```{r Echo=T, Eval=T}
+ModelFull<-glm(admit~gre+gpa+rank, data=admit, family = binomial)
+summary(ModelFull)
 ```
 
 ## *$R^2$* Analogues (*$R^2_L$*) 
 
 The final value we examined in the video was *$R^2_L$*. The code below calculated the statistic from our final model. 
 
-```{r}
+```{r echo=TRUE, eval=TRUE}
 R2L<-(Model4$null.deviance-Model4$deviance) / Model4$null.deviance
 R2L
 ```
 
+Quiz 8: Likelihood Ratio $\chi^2$
+
+```{r logquiz8}
+learnr::quiz(
+  learnr::question("Compare the results we get using the z values from the full model to those produced by `lrtest`. Which conclusion is most correct? (Note, the p values are a good way to draw comparisons",
+    learnr::answer("Findings are consistent", correct = TRUE),
+    learnr::answer("Very different findings"),
+    learnr::answer("Consistent for some variables, inconsistent for others"),
+    correct = "Correct! In this case both tests provided results that were very similar.",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+learnr::question("According to the lecture, under what conditions will you more likely see differences between the two approaches?",
+    learnr::answer("Small sample sizes", correct = TRUE),
+    learnr::answer("Large sample sizes"),
+    learnr::answer("Non-normal predictors"),
+    correct = "Correct! The LR chi-square is preferred with small samples. No harm in using for everything though.",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  )
+)
+``` 
 
 ### Exercise 9 Computing *$R^2_L$*
 
 Adapt the code above to the *admit* data. Be sure to use your final model. 
 
+
+```{r Echo=F}
+ModelFull<-glm(admit~gre+gpa+rank, data=admit, family = binomial)
+```
+
 ```{r ex9, exercise = TRUE, exercise.lines = 2}
 
 ```
+
+
 
 ```{r ex9-solution}
 R2L<-(ModelFull$null.deviance-ModelFull$deviance) / ModelFull$null.deviance
 R2L
 ```
+
+The more common $R^2$ analogues produce somewhat different findings. Nagelkerke gives .14 and Cox-Snell gives .10. (Not computed in this example, just provided for comparison).
+
+Quiz 9: *$R^2_L$* vs. Other Estimates
+
+```{r logquiz9}
+learnr::quiz(
+  learnr::question("Compared to other approaches, *$R^2_L$* tends to provide ... ",
+    learnr::answer("Smaller values", correct = TRUE),
+    learnr::answer("Bigger values"),
+    learnr::answer("Consistent estimates, all of approaches are the same"),
+    correct = "Correct! ",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+  ),
+learnr::question("*$R^2_L$* is considered the 'best' $R^2$ analogue, however use of other approaches persists. Which of the following reasons were discussed in the video?",
+    learnr::answer("Both are correct", correct = TRUE),
+    learnr::answer("Researchers tend to prefer larger $R^2$ values"),
+    learnr::answer("SPSS defaults to Cox Snell and Nagelkerke estimates"),
+    correct = "Correct! Although the difference may seem small, they actually represent large proportional differences. The Cox Snell value .10 of is actually 25% bigger than *$R^2_L$* of .08. The Nagelkerke value of .14 is 75% bigger than *$R^2_L$* of .08!",
+    incorrect = "Sorry, that's incorrect.",
+    random_answer_order = TRUE,
+    allow_retry = T
+)
+)
+``` 
+
 
 Congratulations! You've reached the end of the tutorial. 
