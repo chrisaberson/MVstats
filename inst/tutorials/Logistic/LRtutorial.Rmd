@@ -18,13 +18,13 @@ hint_text <- function(text, text_color = "#E69F00"){
 
 ```
 
-# Logistic Regresison
+# Logistic Regression
 
 ## Overview
 
-This tutorial focuses on learning about logistic regression. I accomplish this with a combination of videos, text, and exercises. The videos are as before but now you can run example code and do exercises right in the tutorial. I can even add questions so that you can make sure you understand concepts before moving on. 
+This tutorial focuses on learning about logistic regression. The tutorial includes a combination of videos, text, and exercises. The videos are as before but now you can run example code and do exercises right in the tutorial. I can even add questions so that you can make sure you understand concepts before moving on. 
 
-The powerpoint slides for the presentation in the videos are on Canvas if you want a copy. 
+The PowerPoint slides for the presentation in the videos are on Canvas if you want a copy. 
 
 ## Packages 
 
@@ -41,11 +41,13 @@ These packages are automatically loaded within this tutorial. If you are working
 
 All data files exist within this package, so we can simply call them without reference to a file location. 
 
-*logistic2* These data represent 164 women. The data examine compliance with mammogram screeing recommendations (i.e., did they get a mammogram?). The variables are **comply** coded as 0 = No, 1 = Yes (this is the outcome variables), **phyrec** also coded as 0 = No, 1 = Yes, representing whether their doctor recommended them for screening (i.e., did their doctor tell them to schedule a screening), **knowledge** a continuously scale measures of knowledge about mammograms, and two variables measuring perceptions about mammograms - **benefits** and **barriers**. 
+*logistic2* These data represent 164 women. The data examine compliance with mammogram screening recommendations (i.e., did they get a mammogram?). The variables are **comply** coded as 0 = No, 1 = Yes (this is the outcome variables), **phyrec** also coded as 0 = No, 1 = Yes, representing whether their doctor recommended them for screening (i.e., did their doctor tell them to schedule a screening), **knowledge** a continuously scaled measure of knowledge about mammograms, and two variables measuring perceptions about mammograms - **benefits** and **barriers**. 
 
 *admit* These data examine Ph.D. program admissions. The variable **admit** is coded as 0 = No, 1 = Yes, representing whether or not the student was admitted (this is the outcome variable). The predictors are **gre**, **gpa**, and **rank** (ranking of the candidate  from letter writers).
 
-Both files are on the class' Google Share drive if you want to work with them outside of the tutorial. They are pre-loaded in this tutorial so you will not need to load the data as you work. 
+Both files are on the class' Google Share drive if you want to work with them outside of the tutorial. They are pre-loaded in this tutorial so you will not need to load the data as you work. (Note: If you are not in my class, these files can be found here: https://osf.io/9tgxm/).
+
+Videos generally range from about 10 to 15 minutes long (there are five of them).
 
 ## Video 1: Logistic Regression Basics and Terms
 
@@ -224,7 +226,7 @@ learnr::quiz(
 
 ## Examples from the video
 
-In the video, we saw the following logisitic regression. Recall that we needed to code the variables to be factors before running logistic. 
+In the video, we saw the following logistic regression. Recall that we needed to code the variables to be factors before running logistic. 
 
 Model1<-glm(comply~physrec, data=logistic2, family = binomial)
 summary(Model1)
@@ -304,7 +306,7 @@ summary(logistic2$comply_F)
 
 Based on these numbers, we could correctly classify 88 people out of the total of 164 (88+76) by simply predicting everyone was in the "No" category. 
 
-Comparing the null model and out prediction model (the one where we used physrec as a predictor) is accomplished with the code below. For some reason, the logistic regression output does not provide that test but the code below accomplishes. 
+Comparing the null model and out prediction model (the one where we used **physrec** as a predictor) is accomplished with the code below. For some reason, the logistic regression output does not provide that test but the code below accomplishes. 
 
 ```{r}
 modelChi<-Model1$null.deviance-Model1$deviance
@@ -352,13 +354,13 @@ summary(Model1)
 
 ## More Model Fit: Predicted outcome vs. actual outcome
 
-Another way to evaluate model fit is to compare actual outcomes to predicted outcomes. The code below accomplishes this. Technically, we are taking the fitted (predicted) probabilty of group membership and assigning people to groups based on those predicted probabilities. 
+Another way to evaluate model fit is to compare actual outcomes to predicted outcomes. The code below accomplishes this. Technically, we are taking the fitted (predicted) probability of group membership and assigning people to groups based on those predicted probabilities. 
 
 ```{r}
 table(null$y,fitted(null)>.5)
 ```
 
-Across the top is the prediction. Here, with no predictors (only the intercept) we predict everyone to be "False" (a No response on the outcome variable). On the left hand side, the 0 and 1 reflect the actual scores, again showing that we have 88 Nos and 76 Yeses. Even without preditors, we still could get about 54% correct. 
+Across the top is the prediction. Here, with no predictors (only the intercept) we predict everyone to be "False" (a No response on the outcome variable). On the left hand side, the 0 and 1 reflect the actual scores, again showing that we have 88 Nos and 76 Yeses. Even without predictors, we still could get about 54% correct. 
 
 Now, examining the model that included predictors. 
 
@@ -368,7 +370,7 @@ table(Model1$y,fitted(Model1)>.5)
 
 Here, we see we are now predicting both True (Yes) and False (No) outcomes. We see that of the 88 people who did not get screened, we predicted 44 correctly as False but also 44 incorrectly as True - so we have a 50% accuracy rate. Among those that did get screened (the 1s), we got 69 correct but only 7 wrong (91% correct!). Overall we have 113 correct responses (44+69) and 51 incorrect (7+44). In total, we have 69% right compared to 54% without any predictors. 
 
-It is always important to interpret this statistic in comparison to the null model. You may be able to correctly classify 70% in a model with predictors but that means very different things if the null model correctly classifies 68% vs. 50%. If the null classifies 68% correctly, our new model (with predictors) isn't much of an improvement whereas if the null classifies 50% correctly, our new model substantially improves predction. 
+It is always important to interpret this statistic in comparison to the null model. You may be able to correctly classify 70% in a model with predictors but that means very different things if the null model correctly classifies 68% vs. 50%. If the null classifies 68% correctly, our new model (with predictors) isn't much of an improvement whereas if the null classifies 50% correctly, our new model substantially improves prediction. 
 
 ### Exercise 5: Classification Tables
 
@@ -454,9 +456,9 @@ chisq.prob
 ```
 To interpret this model, start with the model chi-square values. We have $\chi^2$(1) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
 
-From there, move to the specific predictors. My preference is to use *exp(b)*, the odds ratio. Below I interpret each using their 95% ci's but you can also do this with the probability. Recall that if the CI does not include 1, that we reject the null (a value of 1 means the odds of admission were completely unrelate to the outcome). 
+From there, move to the specific predictors. My preference is to use *exp(b)*, the odds ratio. Below I interpret each using their 95% ci's but you can also do this with the probability. Recall that if the CI does not include 1, that we reject the null (a value of 1 means the odds of admission were completely unrelated to the outcome). 
 
-Physician's recommendation related to greater compliance with screeing, *exp(b)* = 6.31, *95% CI* [2.53,17.57]. Similarly, those who perceived more benefits from mammography were more likely to comply, *exp(b)* = 1.72, *95% CI* [1.08,2.82]. Perceived barriers related to less compliance, *exp(b)* = 0.56, *95% CI* [0.40,0.77], Knowledge was unrelated to compliance, *exp(b)* = 0.92, *95% CI* [0.11,7.69] 
+Physician's recommendation related to greater compliance with screening, *exp(b)* = 6.31, *95% CI* [2.53,17.57]. Similarly, those who perceived more benefits from mammography were more likely to comply, *exp(b)* = 1.72, *95% CI* [1.08,2.82]. Perceived barriers related to less compliance, *exp(b)* = 0.56, *95% CI* [0.40,0.77], Knowledge was unrelated to compliance, *exp(b)* = 0.92, *95% CI* [0.11,7.69] 
 
 Turning to classification, the table below shows us jumping to 69% correctly classified (113 correct out of 164 total).
 
@@ -464,9 +466,9 @@ Turning to classification, the table below shows us jumping to 69% correctly cla
 table(Model4$y,fitted(Model4)>.5)
 ```
 
-### Exercise 6: Running logistic with mutliple predictors
+### Exercise 6: Running logistic with multiple predictors
 
-Run logistic regression using the admit data. Predict admit_F (the variable) from gre, gpa, and rank. Call your model ex6. 
+Run logistic regression using the *admit* data. Predict **admit_F** from **gre**, **gpa**, and **rank**. Call your model ex6. 
 
 ```{r ex6, exercise = TRUE, exercise.lines = 7}
 
@@ -549,7 +551,7 @@ learnr::quiz(
 
 ``` 
 
-## Exercise 7: Classification for mutliple predictors
+## Exercise 7: Classification for multiple predictors
 
 Recall the code for classification from earlier. 
 
@@ -645,7 +647,7 @@ Model.gpa<-glm(admit~gre+rank, data=admit, family = binomial)
 Model.rank<-glm(admit~gre+gpa, data=admit, family = binomial)
 ```
 
-Once you've built the models, compare them using lrtest from the `lmtest` package. This should yield three tests. .
+Once you've built the models, compare them using *lrtest* from the `lmtest` package. This should yield three tests. .
 
 ```{r ex8b, exercise = TRUE, exercise.lines = 3}
 
