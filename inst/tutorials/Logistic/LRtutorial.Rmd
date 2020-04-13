@@ -47,11 +47,11 @@ All data files exist within this package, so we can simply call them without ref
 
 Both files are on the class' Google Share drive if you want to work with them outside of the tutorial. They are pre-loaded in this tutorial so you will not need to load the data as you work. 
 
-## Logistic Regression: Basics and Terms Video
+## Video 1: Logistic Regression Basics and Terms
 
-![](https://youtu.be/AJsKUo-XwZQ) Video 1
+![](https://youtu.be/xw2NyvAhMp0)
 
-## Quiz
+## Quiz 1: Basics
 
 ```{r logquiz_dv}
 learnr::quiz(
@@ -149,9 +149,9 @@ summary(admit$admit_F)
 
 Make sure you have run this analysis. Your code later in the tutorial will not work unless you complete this task. 
 
-## Examine Relationship Using Linear Regression 
+## Video 2: Try it as Linear Regression 
 
-![](https://youtu.be/AJsKUo-XwZQ) Video 2
+![](https://youtu.be/v-EeunqPUok)
 
 
 ## With Linear Regression Examples (a.k.a., why we can't use linear regression)
@@ -198,12 +198,12 @@ plot(ex2)
 ```
 
 
-## Running Logistic Regression: 1 Predictor 
+## Video #3: Running Logistic Regression with 1 Predictor 
 
-![](https://youtu.be/AJsKUo-XwZQ) Video 3
+![](https://youtu.be/o2uv83uD7-c)
 
 
-## Quiz
+## Quiz 2 First Steps
 
 ```{r logquiz2}
 learnr::quiz(
@@ -267,7 +267,7 @@ exp(ex3$coefficients)
 exp(confint(ex3))
 ```
 
-### Quiz
+### Quiz 3: Interpret Results
 
 ```{r logquiz3}
 learnr::quiz(
@@ -381,7 +381,8 @@ Build a classification table for the admit data. Use the model built in the prev
 ```{r ex5-solution}
 table(ex4$y,fitted(ex4)>.5)
 ```
-### Quiz
+
+Quiz 4: Interpretation
 
 ```{r logquiz4}
 learnr::quiz(
@@ -404,11 +405,13 @@ Note that in the prediction model we did see that GRE scores were significantly 
 summary(glm(admit_F~gre, data=admit, family = binomial))
 ```
 
-## Video: Logistic Regression with Multiple Predictors
+## Video #4: Logistic Regression with Multiple Predictors
 
-## Logistic Regression with Multiple Predictors
+![](https://youtu.be/IuCv-E-KNPw)
 
-### Quiz
+
+### Quiz 5: Interactions?
+
 
 ```{r logquiz5}
 learnr::quiz(
@@ -432,6 +435,9 @@ learnr::quiz(
 
 ``` 
 
+
+## Logistic Regression with Multiple Predictors
+
 This analysis appeared in the video. 
 
 ```{r}
@@ -446,7 +452,7 @@ chidf
 chisq.prob<-1-pchisq(modelChi, chidf)
 chisq.prob
 ```
-To interpret this model, start with the model chi-square values. We have $$\chi^2$$(1) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
+To interpret this model, start with the model chi-square values. We have $\chi^2$(1) = 58.8, *p* < .001. This tells us the four variables together significantly predict compliance. 
 
 From there, move to the specific predictors. My preference is to use *exp(b)*, the odds ratio. Below I interpret each using their 95% ci's but you can also do this with the probability. Recall that if the CI does not include 1, that we reject the null (a value of 1 means the odds of admission were completely unrelate to the outcome). 
 
@@ -479,7 +485,7 @@ chisq.prob<-1-pchisq(modelChi, chidf)
 chisq.prob
 ```
 
-### Quiz
+### Quiz 6 Interpreting Multiple Predictor Models
 
 ```{r logquiz6}
 learnr::quiz(
@@ -543,7 +549,7 @@ learnr::quiz(
 
 ``` 
 
-### Exercise 7: Classification for mutliple predictors
+## Exercise 7: Classification for mutliple predictors
 
 Recall the code for classification from earlier. 
 
@@ -561,6 +567,7 @@ Adapt this code to the model in the previous exercise to build a classification 
 table(ex6$y,fitted(ex6)>.5)
 ```
 
+Quiz 7: Classification 
 
 ```{r logquiz7}
 learnr::quiz(
@@ -594,14 +601,15 @@ learnr::question("What percent of the total number  outcomes were correctly clas
 )
 ``` 
 
-## Video - Logistic Regression V: Other Useful Statistics
+## Video #5: Logistic Regression Other Useful Statistics
 
+![](https://youtu.be/z55gaV3CjzQ)
 
-## Likelihood ratio $$\chi^2$$
+## Likelihood ratio $\chi^2$
 
-The LR $$\chi^2$$ is a more stable estimate of statistical significance than are the z-tests provided in R. Although not really the case in our examples, those values can tend to go crazy with smaller samples and complex models. 
+The LR $\chi^2$ is a more stable estimate of statistical significance than are the z-tests provided in R. Although not really the case in our examples, those values can tend to go crazy with smaller samples and complex models. 
 
-Running the LR $$\chi^2$$ requires that we first build a model with all of our predictors. Then we build models with all but one of the predictors included. In the example from the video with four predictors this meant that we created four additional models, in each one we excluded one (and only one) of our variables. Model 4 is the full model (with all four predictors). Model.phys has everything but physician's recommendation. Model.know has everything but knowledge, etc. 
+Running the LR $\chi^2$ requires that we first build a model with all of our predictors. Then we build models with all but one of the predictors included. In the example from the video with four predictors this meant that we created four additional models, in each one we excluded one (and only one) of our variables. Model 4 is the full model (with all four predictors). Model.phys has everything but physician's recommendation. Model.know has everything but knowledge, etc. 
 
 ```{r}
 Model4<-glm(comply~physrec+knowledg+benefits+barriers, data=logistic2, family = binomial())
@@ -620,9 +628,9 @@ lmtest::lrtest(Model4,Model.benef)
 lmtest::lrtest(Model4,Model.barr)
 ```
 
-The result for the first comparison (Model4 vs. Model.phys) is the LR $$\chi^2$$ for phys and so on down the line. 
+The result for the first comparison (Model4 vs. Model.phys) is the LR $\chi^2$ for phys and so on down the line. 
 
-### Exercise 8 - Likelihood Ratio $$\chi^2$$
+### Exercise 8 - Likelihood Ratio $\chi^2$ 
 
 Build your models here. Remember you will need one full model and then several (depending on the number of predictors) that exclude a single variable. 
 
@@ -650,9 +658,9 @@ lmtest::lrtest(ModelFull,Model.rank)
 
 ```
 
-## *$$R^2$$* Analogues (*$$R^2_L$$*) 
+## *$R^2$* Analogues (*$R^2_L$*) 
 
-The final value we examined in the video was *$$R^2_L$$*. The code below calculated the statistic from our final model. 
+The final value we examined in the video was *$R^2_L$*. The code below calculated the statistic from our final model. 
 
 ```{r}
 R2L<-(Model4$null.deviance-Model4$deviance) / Model4$null.deviance
@@ -660,7 +668,7 @@ R2L
 ```
 
 
-### Exercise 9 Computing $$R^2_L$$*
+### Exercise 9 Computing *$R^2_L$*
 
 Adapt the code above to the *admit* data. Be sure to use your final model. 
 
@@ -673,3 +681,4 @@ R2L<-(ModelFull$null.deviance-ModelFull$deviance) / ModelFull$null.deviance
 R2L
 ```
 
+Congratulations! You've reached the end of the tutorial. 

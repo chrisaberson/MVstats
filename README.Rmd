@@ -8,15 +8,20 @@ output: md_document
 To install the package, use the following code.
 
 
+```{r eval=FALSE}
 install.packages("devtools")  
-install.packages"learnr")  
+install.packages("learnr")  
 library(devtools)  
 install_github("chrisaberson/MVstats")  
+```
 
 To run a tutorial, use this code. Currently, there is only a Logistic tutorial. 
 
+```{r eval=FALSE}
 library(learnr)  
+library(MVstats)
 run_tutorial("Logistic", package = "MVstats")  
+```
 
 After you run this code, the tutorial will open, either in a separate RStudio standalone window or in a tab on your browser. 
 
