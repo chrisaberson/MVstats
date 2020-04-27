@@ -5,12 +5,12 @@ To install the package, use the following code.
     library(devtools)  
     install_github("chrisaberson/MVstats")  
 
-To run a tutorial, use this code. Currently, there is only a Logistic
-tutorial.
+To run a tutorial, use this code..
 
     library(learnr)  
     library(MVstats)
-    run_tutorial("Logistic", package = "MVstats")  
+    run_tutorial("Logistic", package = "MVstats")  #For logistic
+    run_tutorial("Mediation", package = "MVstats")  #For mediation
 
 After you run this code, the tutorial will open, either in a separate
 RStudio standalone window or in a tab on your browser.

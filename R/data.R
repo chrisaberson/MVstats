@@ -37,3 +37,60 @@
 #'
 
 "admit"
+
+
+#' Mindfulness data
+#'
+#' A dataset with measures of mindfulness, life satisfaction, and self awareness
+#'
+#' @format A data frame with 331 rows and 7 variables:
+#' \describe{
+#'   \item{SelfAware}{Self Awareness}
+#'   \item{Mindfulness}{Mindfulness}
+#'   \item{LifeSat}{Life Satisfaction}
+#'   \item{OBE}{Observing}
+#'   \item{DES}{Describing}
+#'   \item{JUD}{Acting with Awareness}
+#'   \item{ACT}{Non Judgemental}
+#'   }
+#'
+
+"Mindful"
+
+#' Mediation Example I
+#'
+#' A dataset with measures of contact, threats, and prejudice
+#'
+#' @format A data frame with 534 rows and 8 variables:
+#' \describe{
+#'   \item{id}{ID}
+#'   \item{negatt}{negatt - not used in example}
+#'   \item{stereo}{Stereotype endorsement}
+#'   \item{anxiety}{Intergroup anxiety}
+#'   \item{symbolic}{Symbolic Threat}
+#'   \item{realistic}{Realistic Threat}
+#'   \item{quality}{Contact Quality}
+#'   \item{att}{Attitudes toward outgroup}
+#'   }
+#'
+
+"mednomiss"
+
+#' Mediation Example II
+#'
+#' A dataset with measures of contact, threats, and prejudice (with some missing data)
+#'
+#' @format A data frame with 543 rows and 8 variables:
+#' \describe{
+#'   \item{id}{ID}
+#'   \item{negatt}{negatt - not used in example}
+#'   \item{stereo}{Stereotype endorsement}
+#'   \item{anxiety}{Intergroup anxiety}
+#'   \item{symbolic}{Symbolic Threat}
+#'   \item{realistic}{Realistic Threat}
+#'   \item{quality}{Contact Quality}
+#'   \item{att}{Attitudes toward outgroup}
+#'   }
+#'
+
+"med"
