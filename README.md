@@ -2,8 +2,7 @@ To install the package, use the following code.
 
     install.packages("devtools")  
     install.packages("learnr")  
-    library(devtools)  
-    install_github("chrisaberson/MVstats")  
+    devtools::install_github("chrisaberson/MVstats")  
 
 To run a tutorial, use this code..
 
